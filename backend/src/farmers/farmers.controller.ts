@@ -16,9 +16,14 @@ export class FarmersController {
   constructor(private readonly farmersService: FarmersService) {}
 
   @Post()
-create(@Body() createFarmerDto: CreateFarmerDto) {
-  return this.farmersService.create(createFarmerDto);
-}
+  create(@Body() createFarmerDto: CreateFarmerDto) {
+    return this.farmersService.create(createFarmerDto);
+  }
+
+  @Get()
+  findAll() {
+    return this.farmersService.findAll();
+  }
 
   @Get(':id')
   findOne(@Param('id') id: string) {
@@ -38,5 +43,9 @@ create(@Body() createFarmerDto: CreateFarmerDto) {
     return this.farmersService.remove(id);
   }
 
-  
+  // ✅ NOVA ROTA PARA DESATIVAR AGRICULTOR
+  @Patch(':id/deactivate')
+  deactivate(@Param('id') id: string) {
+    return this.farmersService.deactivate(id);
+  }
 }
