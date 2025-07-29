@@ -42,10 +42,12 @@ const FarmerForm: React.FC<FarmerFormProps> = ({ selectedFarmer, setSelectedFarm
   }
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     if (name === 'cpf') {
       const formattedCPF = formatCPF(value);
       setFormData((prev) => ({ ...prev, cpf: formattedCPF }));
+    } else if (type === 'checkbox') {
+      setFormData((prev) => ({ ...prev, [name]: checked }));
     } else {
       setFormData((prev) => ({ ...prev, [name]: value }));
     }
@@ -110,6 +112,17 @@ const FarmerForm: React.FC<FarmerFormProps> = ({ selectedFarmer, setSelectedFarm
         placeholder="Data de nascimento"
       />
       <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Telefone" />
+      
+      <label>
+        <input
+          type="checkbox"
+          name="active"
+          checked={formData.active}
+          onChange={handleChange}
+        />
+        Ativo
+      </label>
+
       <button type="submit">{selectedFarmer ? 'Atualizar' : 'Cadastrar'}</button>
     </form>
   );
