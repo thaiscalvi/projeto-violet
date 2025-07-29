@@ -17,11 +17,43 @@ const FarmerList: React.FC<FarmerListProps> = ({ setSelectedFarmer }) => {
   const [farmers, setFarmers] = React.useState<Farmer[]>([]);
 
   React.useEffect(() => {
-    fetch('http://localhost:3000/farmers')
-      .then((response) => response.json())
-      .then((data) => setFarmers(data))
-      .catch((error) => console.error('Erro ao buscar agricultores', error));
+    fetchFarmers();
   }, []);
+
+  async function fetchFarmers() {
+    try {
+      const response = await fetch('http://localhost:3000/farmers');
+      const data = await response.json();
+      setFarmers(data);
+    } catch (error) {
+      console.error('Erro ao buscar agricultores', error);
+    }
+  }
+
+  async function handleDelete(farmer: Farmer) {
+    if (farmer.active) {
+      alert('Não é possível excluir um agricultor ativo. Desative-o antes.');
+      return;
+    }
+
+    const confirmDelete = window.confirm(`Tem certeza que deseja excluir o agricultor ${farmer.fullName}?`);
+    if (!confirmDelete) return;
+
+    try {
+      const response = await fetch(`http://localhost:3000/farmers/${farmer._id}`, {
+        method: 'DELETE',
+      });
+      if (response.ok) {
+        alert('Agricultor excluído com sucesso!');
+        fetchFarmers(); // atualiza a lista
+      } else {
+        alert('Não foi possível excluir o agricultor.');
+      }
+    } catch (error) {
+      alert('Erro ao tentar excluir agricultor');
+      console.error(error);
+    }
+  }
 
   function formatDate(dateStr: string) {
     if (!dateStr) return '-';
@@ -53,6 +85,12 @@ const FarmerList: React.FC<FarmerListProps> = ({ setSelectedFarmer }) => {
               <td>{farmer.active ? 'Ativo' : 'Inativo'}</td>
               <td>
                 <button onClick={() => setSelectedFarmer(farmer)}>Editar</button>
+                <button 
+                  style={{ marginLeft: '8px', backgroundColor: '#d9534f', color: 'white' }}
+                  onClick={() => handleDelete(farmer)}
+                >
+                  Deletar
+                </button>
               </td>
             </tr>
           ))}
