@@ -32,19 +32,32 @@ const FarmerList: React.FC<FarmerListProps> = ({ setSelectedFarmer }) => {
   return (
     <div>
       <h2>Lista de Agricultores</h2>
-      <ul>
-        {farmers.map((farmer) => (
-          <li key={farmer._id} className="farmer-card">
-             <span className="farmer-info">
-            <strong>{farmer.fullName}</strong> - CPF: {farmer.cpf} -
-                {formatDate(farmer.birthDate)} - 
-            Tel: {farmer.phone} - 
-            Status: {farmer.active ? 'Ativo' : 'Inativo'}
-            </span>
-            <button onClick={() => setSelectedFarmer(farmer)}>Editar</button>
-          </li>
-        ))}
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>Nome Completo</th>
+            <th>CPF</th>
+            <th>Data de Nascimento</th>
+            <th>Telefone</th>
+            <th>Status</th>
+            <th>Ações</th>
+          </tr>
+        </thead>
+        <tbody>
+          {farmers.map((farmer) => (
+            <tr key={farmer._id}>
+              <td>{farmer.fullName}</td>
+              <td>{farmer.cpf}</td>
+              <td>{formatDate(farmer.birthDate)}</td>
+              <td>{farmer.phone}</td>
+              <td>{farmer.active ? 'Ativo' : 'Inativo'}</td>
+              <td>
+                <button onClick={() => setSelectedFarmer(farmer)}>Editar</button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };
