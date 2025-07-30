@@ -4,24 +4,42 @@ Este projeto implementa a API backend para o cadastro de agricultores, usando Ne
 
 ---
 
-## Funcionalidades implementadas
+## Funcionalidades Implementadas
 
-- Criação de agricultor (`POST /farmers`)
-- Listagem de todos agricultores (`GET /farmers`)
-- Busca de agricultor por ID (`GET /farmers/:id`)
-- Atualização de agricultor (exceto CPF) (`PATCH /farmers/:id`)
-- Exclusão de agricultor (somente se `active` for `false`) (`DELETE /farmers/:id`)
-- Desativação de agricultor (seta `active` para `false`) (`PATCH /farmers/:id/deactivate`)
+- Criação de agricultor com validação dos campos obrigatórios, incluindo validação e formatação do CPF.
+- Validação para garantir que o CPF seja único no banco de dados, evitando duplicidade.
+- Validação completa do CPF pelo algoritmo oficial para assegurar CPF válido.
+- Listagem de todos os agricultores em formato tabular, exibindo informações como nome completo, CPF, data de nascimento, telefone e status (ativo/inativo).
+- Busca de agricultor por ID para visualizar detalhes específicos.
+- Atualização dos dados do agricultor, com restrição para que o CPF não possa ser alterado após o cadastro.
+- Desativação do agricultor, alterando o campo `active` para `false` sem excluí-lo.
+- Exclusão do agricultor permitida somente se estiver desativado (`active` = false), com confirmação e tratamento de erros apropriado.
+- Interface frontend com botões para editar e excluir (exclusão restrita a agricultores inativos) diretamente na tabela.
+- Tratamento e validação de dados tanto no backend (NestJS + Mongoose) quanto no frontend (React), garantindo consistência e usabilidade.
 
 ---
 
-## Regras de negócio atendidas
+## Regras de Negócio Atendidas
 
-- CPF é único e não pode ser alterado após o cadastro
-- Só é permitido excluir agricultor com `active === false`
-- Validação de existência do agricultor e validação do ID (com `isValidObjectId`)
-- Tratamento de erros para operações inválidas
+- **RN1 – Criação de Agricultor:**  
+  ✓ Implementado o cadastro de agricultor com os campos obrigatórios e opcionais, incluindo o campo `active` com valor padrão `true`.
 
+- **RN2 – CPF Único:**  
+  ✓ Garantida a unicidade do CPF no banco de dados, com validação para impedir cadastros duplicados.
+
+- **RN3 – Validação de CPF:**  
+  ✓ Implementado algoritmo oficial para validar CPFs válidos no frontend e backend, evitando CPFs inválidos.
+
+- **RN4 – Edição de Agricultor:**  
+  ✓ Backend: já implementado para permitir edição dos dados do agricultor, exceto o CPF, que é imutável após o cadastro.  
+  ⚠ Frontend: botão e formulário de edição criados; lógica completa da edição e controle da imutabilidade do CPF ainda em desenvolvimento.
+
+- **RN5 – Exclusão de Agricultor:**  
+  ✓ Exclusão só permitida para agricultores com o campo `active` definido como `false`. Alerta exibido caso tente excluir ativo.
+
+- **RN6 – Listagem de Agricultores:**  
+  ✓ Agricultores exibidos em formato tabular com informações claras.  
+  ✓ Botões de edição e exclusão implementados com confirmações e alertas apropriados para regras de negócio.
 ---
 
 ## Tecnologias
@@ -30,13 +48,7 @@ Este projeto implementa a API backend para o cadastro de agricultores, usando Ne
 - NestJS
 - MongoDB Atlas (via Mongoose)
 - class-validator (validação dos DTOs)
-
----
-
-## Status do projeto
-
-- Backend: CRUD básico e regras principais implementados e funcionando
-- Frontend: em desenvolvimento, falta implementar botões de edição e exclusão na interface
+- Insomnia (para testar a API)
 
 ---
 
@@ -63,15 +75,14 @@ Este projeto implementa a API backend para o cadastro de agricultores, usando Ne
 
 A API oferece os seguintes endpoints para gerenciar os agricultores:
 
-| Método | Rota                | Descrição                                 |
-|--------|---------------------|-------------------------------------------|
-| POST   | `/farmers`           | Criar um novo agricultor                  |
-| GET    | `/farmers`           | Listar todos os agricultores              |
-| GET    | `/farmers/:id`       | Buscar um agricultor pelo ID              |
-| PATCH  | `/farmers/:id`       | Atualizar dados do agricultor (exceto CPF) |
+| Método | Rota                      | Descrição                                 |
+|--------|---------------------------|-------------------------------------------|
+| POST   | `/farmers`                | Criar um novo agricultor                  |
+| GET    | `/farmers`                | Listar todos os agricultores              |
+| GET    | `/farmers/:id`            | Buscar um agricultor pelo ID              |
+| PATCH  | `/farmers/:id`            | Atualizar dados do agricultor (exceto CPF) |
 | PATCH  | `/farmers/:id/deactivate` | Desativar um agricultor (define active = false) |
-| DELETE | `/farmers/:id`       | Remover agricultor (só se active = false) |
-
+| DELETE | `/farmers/:id`            | Remover agricultor (só se active = false) |
 ---
 
 ### Observações importantes
@@ -79,3 +90,4 @@ A API oferece os seguintes endpoints para gerenciar os agricultores:
 - O campo `cpf` não pode ser alterado após o cadastro.
 - Um agricultor só pode ser excluído se estiver desativado (`active === false`).
 - A rota de desativação permite "inativar" o agricultor sem excluir os dados.
+- Mensagens claras informam quando ações não permitidas são tentadas (ex: excluir agricultor ativo).
