@@ -70,7 +70,6 @@ button:hover {
 
 /* Layout container */
 div {
-  max-width: 900px;
   margin: auto;
 }
 
@@ -119,8 +118,8 @@ thead tr {
 
 thead th {
   color: var(--violet-white);
-  text-align: left;
-  padding: 14px 18px;
+  text-align: center;
+  padding: 20px 18px;
   font-weight: 700;
   border-bottom: none;
 }
@@ -143,21 +142,28 @@ tbody td {
   font-weight: 600;
   vertical-align: middle;
   border-bottom: none;
-   margin-left: 8px; /* espaço entre os botões */ 
+}
+
+tbody td > button {
+  width: 90px; /* largura fixa */
+  margin: 5px auto; /* centraliza e dá espaçamento vertical entre os botões */
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  font-size: 0.9rem; /* texto um pouco menor */
 }
 
 tbody button {
   background-color: var(--violet-purple);
   color: var(--violet-white);
-  padding: 8px 20px;
   border-radius: 8px;
   font-weight: 700;
-  border: none;
   cursor: pointer;
   transition: background-color 0.3s ease;
-  white-space: nowrap;
 }
 
 tbody button:hover {
   background-color: var(--violet-light-purple);
 }
+
