@@ -41,17 +41,40 @@ const FarmerForm: React.FC<FarmerFormProps> = ({ selectedFarmer, setSelectedFarm
     return value;
   }
 
-  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-    const { name, value, type, checked } = e.target;
-    if (name === 'cpf') {
-      const formattedCPF = formatCPF(value);
-      setFormData((prev) => ({ ...prev, cpf: formattedCPF }));
-    } else if (type === 'checkbox') {
-      setFormData((prev) => ({ ...prev, [name]: checked }));
-    } else {
-      setFormData((prev) => ({ ...prev, [name]: value }));
-    }
+  // Função para formatar o número enquanto digita
+  function formatPhone(value: string) {
+  // Remove tudo que não é número
+  value = value.replace(/\D/g, '');
+
+  // Aplica a máscara (XX) XXXXX-XXXX
+  if (value.length > 10) {
+    value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
+  } else if (value.length > 5) {
+    value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
+  } else if (value.length > 2) {
+    value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
+  } else {
+    value = value.replace(/^(\d*)/, '($1');
   }
+
+  return value;
+}
+
+function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+  const { name, value, type, checked } = e.target;
+
+  if (name === 'cpf') {
+    const formattedCPF = formatCPF(value);
+    setFormData((prev) => ({ ...prev, cpf: formattedCPF }));
+  } else if (name === 'phone') {
+    const formattedPhone = formatPhone(value);
+    setFormData((prev) => ({ ...prev, phone: formattedPhone }));
+  } else if (type === 'checkbox') {
+    setFormData((prev) => ({ ...prev, [name]: checked }));
+  } else {
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  }
+}
 
   // Função para validar CPF (apenas números, verifica dígitos verificadores)
   function validarCPF(cpf: string): boolean {
@@ -111,6 +134,7 @@ const FarmerForm: React.FC<FarmerFormProps> = ({ selectedFarmer, setSelectedFarm
         onChange={handleChange}
         placeholder="Data de nascimento"
       />
+
       <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Telefone" />
       
       <label>
