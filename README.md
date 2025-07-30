@@ -10,12 +10,15 @@ Este projeto implementa a API backend para o cadastro de agricultores, usando Ne
 - Validação para garantir que o CPF seja único no banco de dados, evitando duplicidade.
 - Validação completa do CPF pelo algoritmo oficial para assegurar CPF válido.
 - Listagem de todos os agricultores em formato tabular, exibindo informações como nome completo, CPF, data de nascimento, telefone e status (ativo/inativo).
-- Busca de agricultor por ID para visualizar detalhes específicos.
+- Busca de agricultor por ID para visualizar detalhes específicos (Backend).
 - Atualização dos dados do agricultor, com restrição para que o CPF não possa ser alterado após o cadastro.
 - Desativação do agricultor, alterando o campo `active` para `false` sem excluí-lo.
 - Exclusão do agricultor permitida somente se estiver desativado (`active` = false), com confirmação e tratamento de erros apropriado.
 - Interface frontend com botões para editar e excluir (exclusão restrita a agricultores inativos) diretamente na tabela.
 - Tratamento e validação de dados tanto no backend (NestJS + Mongoose) quanto no frontend (React), garantindo consistência e usabilidade.
+- Máscaras e validações no frontend para campos CPF e telefone, garantindo usabilidade e consistência de dados.
+- Alerta exibido quando tenta editar CPF, impedindo alteração indevida.
+- Confirmações para exclusão, respeitando a regra de só excluir agricultores inativos.
 
 ---
 
@@ -32,7 +35,7 @@ Este projeto implementa a API backend para o cadastro de agricultores, usando Ne
 
 - **RN4 – Edição de Agricultor:**  
   ✓ Backend: já implementado para permitir edição dos dados do agricultor, exceto o CPF, que é imutável após o cadastro.  
-  ⚠ Frontend: botão e formulário de edição criados; lógica completa da edição e controle da imutabilidade do CPF ainda em desenvolvimento.
+  ✓ Frontend: formulário de edição completo com carregamento dos dados ao clicar em editar, máscara no CPF e telefone, alerta para impedir alteração do CPF, atualização dos dados funcionando corretamente, com feedback de sucesso.
 
 - **RN5 – Exclusão de Agricultor:**  
   ✓ Exclusão só permitida para agricultores com o campo `active` definido como `false`. Alerta exibido caso tente excluir ativo.
@@ -91,3 +94,4 @@ A API oferece os seguintes endpoints para gerenciar os agricultores:
 - Um agricultor só pode ser excluído se estiver desativado (`active === false`).
 - A rota de desativação permite "inativar" o agricultor sem excluir os dados.
 - Mensagens claras informam quando ações não permitidas são tentadas (ex: excluir agricultor ativo).
+- Máscaras e validações no frontend melhoram a experiência do usuário e a consistência dos dados.
