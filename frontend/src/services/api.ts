@@ -13,6 +13,6 @@ export const createFarmer = async (data: any) => {
 };
 
 export const updateFarmer = async (id: string, data: any) => {
-  const response = await axios.put(`${API_URL}/${id}`, data);
+  const response = await axios.patch(`${API_URL}/${id}`, data);
   return response.data;
 };

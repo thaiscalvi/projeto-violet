@@ -115,8 +115,10 @@ function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
 
     if (selectedFarmer && selectedFarmer._id) {
       await updateFarmer(selectedFarmer._id, formData);
+        alert('Agricultor atualizado com sucesso!');
     } else {
       await createFarmer(formData);
+          alert('Agricultor cadastrado com sucesso!');
     }
 
     setFormData({ fullName: '', cpf: '', birthDate: '', phone: '', active: true });
