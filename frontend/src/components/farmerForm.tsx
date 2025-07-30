@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { createFarmer, updateFarmer } from '../services/api';
+import React, { useEffect, useState } from "react";
+import { createFarmer, updateFarmer } from "../services/api";
 
 interface Farmer {
   _id?: string;
@@ -15,12 +15,15 @@ interface FarmerFormProps {
   setSelectedFarmer: (farmer: Farmer | null) => void;
 }
 
-const FarmerForm: React.FC<FarmerFormProps> = ({ selectedFarmer, setSelectedFarmer }) => {
+const FarmerForm: React.FC<FarmerFormProps> = ({
+  selectedFarmer,
+  setSelectedFarmer,
+}) => {
   const [formData, setFormData] = useState<Farmer>({
-    fullName: '',
-    cpf: '',
-    birthDate: '',
-    phone: '',
+    fullName: "",
+    cpf: "",
+    birthDate: "",
+    phone: "",
     active: true,
   });
 
@@ -31,54 +34,56 @@ const FarmerForm: React.FC<FarmerFormProps> = ({ selectedFarmer, setSelectedFarm
   // Função para formatar o CPF enquanto digita
   function formatCPF(value: string) {
     // Remove tudo que não for número
-    value = value.replace(/\D/g, '');
+    value = value.replace(/\D/g, "");
 
     // Aplica a máscara de CPF
-    if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, '$1.$2');
-    if (value.length > 6) value = value.replace(/^(\d{3})\.(\d{3})(\d)/, '$1.$2.$3');
-    if (value.length > 9) value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, '$1.$2.$3-$4');
+    if (value.length > 3) value = value.replace(/^(\d{3})(\d)/, "$1.$2");
+    if (value.length > 6)
+      value = value.replace(/^(\d{3})\.(\d{3})(\d)/, "$1.$2.$3");
+    if (value.length > 9)
+      value = value.replace(/^(\d{3})\.(\d{3})\.(\d{3})(\d)/, "$1.$2.$3-$4");
 
     return value;
   }
 
   // Função para formatar o número enquanto digita
   function formatPhone(value: string) {
-  // Remove tudo que não é número
-  value = value.replace(/\D/g, '');
+    // Remove tudo que não é número
+    value = value.replace(/\D/g, "");
 
-  // Aplica a máscara (XX) XXXXX-XXXX
-  if (value.length > 10) {
-    value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, '($1) $2-$3');
-  } else if (value.length > 5) {
-    value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, '($1) $2-$3');
-  } else if (value.length > 2) {
-    value = value.replace(/^(\d{2})(\d{0,5})/, '($1) $2');
-  } else {
-    value = value.replace(/^(\d*)/, '($1');
+    // Aplica a máscara (XX) XXXXX-XXXX
+    if (value.length > 10) {
+      value = value.replace(/^(\d{2})(\d{5})(\d{4}).*/, "($1) $2-$3");
+    } else if (value.length > 5) {
+      value = value.replace(/^(\d{2})(\d{4})(\d{0,4}).*/, "($1) $2-$3");
+    } else if (value.length > 2) {
+      value = value.replace(/^(\d{2})(\d{0,5})/, "($1) $2");
+    } else {
+      value = value.replace(/^(\d*)/, "($1");
+    }
+
+    return value;
   }
 
-  return value;
-}
+  function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const { name, value, type, checked } = e.target;
 
-function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
-  const { name, value, type, checked } = e.target;
-
-  if (name === 'cpf') {
-    const formattedCPF = formatCPF(value);
-    setFormData((prev) => ({ ...prev, cpf: formattedCPF }));
-  } else if (name === 'phone') {
-    const formattedPhone = formatPhone(value);
-    setFormData((prev) => ({ ...prev, phone: formattedPhone }));
-  } else if (type === 'checkbox') {
-    setFormData((prev) => ({ ...prev, [name]: checked }));
-  } else {
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "cpf") {
+      const formattedCPF = formatCPF(value);
+      setFormData((prev) => ({ ...prev, cpf: formattedCPF }));
+    } else if (name === "phone") {
+      const formattedPhone = formatPhone(value);
+      setFormData((prev) => ({ ...prev, phone: formattedPhone }));
+    } else if (type === "checkbox") {
+      setFormData((prev) => ({ ...prev, [name]: checked }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   }
-}
 
   // Função para validar CPF (apenas números, verifica dígitos verificadores)
   function validarCPF(cpf: string): boolean {
-    cpf = cpf.replace(/\D/g, ''); // remove tudo que não for número
+    cpf = cpf.replace(/\D/g, ""); // remove tudo que não for número
 
     if (cpf.length !== 11) return false;
 
@@ -109,43 +114,60 @@ function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     e.preventDefault();
 
     if (!validarCPF(formData.cpf)) {
-      alert('CPF inválido! Por favor, digite um CPF válido.');
+      alert("CPF inválido! Por favor, digite um CPF válido.");
       return;
     }
 
     if (selectedFarmer && selectedFarmer._id) {
       await updateFarmer(selectedFarmer._id, formData);
-        alert('Agricultor atualizado com sucesso!');
+      alert("Agricultor atualizado com sucesso!");
     } else {
       await createFarmer(formData);
-          alert('Agricultor cadastrado com sucesso!');
+      alert("Agricultor cadastrado com sucesso!");
     }
 
-    setFormData({ fullName: '', cpf: '', birthDate: '', phone: '', active: true });
+    setFormData({
+      fullName: "",
+      cpf: "",
+      birthDate: "",
+      phone: "",
+      active: true,
+    });
     setSelectedFarmer(null);
   }
 
   return (
     <form onSubmit={handleSubmit}>
-      <input name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Nome completo" />
-      <input name="cpf" value={formData.cpf} onChange={handleChange} placeholder="CPF" maxLength={14}  
-       onFocus={() => {
-      if (selectedFarmer) {
-      alert('O CPF não pode ser alterado.');
-      // Se quiser, tira o foco do input para evitar edição:
-      (document.activeElement as HTMLElement)?.blur();
-    }
-  }}/>
+      <input
+        name="fullName"
+        value={formData.fullName}
+        onChange={handleChange}
+        placeholder="Nome completo"
+      />
+      <input
+        name="cpf"
+        value={formData.cpf}
+        onChange={handleChange}
+        placeholder="CPF"
+        maxLength={14}
+        readOnly={!!selectedFarmer}
+        className={selectedFarmer ? "input-bloqueado" : ""}
+      />
       <input
         type="date"
         name="birthDate"
-        value={formData.birthDate ? formData.birthDate.split('T')[0] : ''}
+        value={formData.birthDate ? formData.birthDate.split("T")[0] : ""}
         onChange={handleChange}
         placeholder="Data de nascimento"
       />
 
-      <input name="phone" value={formData.phone} onChange={handleChange} placeholder="Telefone" />
-      
+      <input
+        name="phone"
+        value={formData.phone}
+        onChange={handleChange}
+        placeholder="Telefone"
+      />
+
       <label>
         <input
           type="checkbox"
@@ -156,7 +178,9 @@ function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
         Ativo
       </label>
 
-      <button type="submit">{selectedFarmer ? 'Atualizar' : 'Cadastrar'}</button>
+      <button type="submit">
+        {selectedFarmer ? "Atualizar" : "Cadastrar"}
+      </button>
     </form>
   );
 };

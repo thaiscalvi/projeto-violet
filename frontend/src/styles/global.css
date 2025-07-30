@@ -167,3 +167,8 @@ tbody button:hover {
   background-color: var(--violet-light-purple);
 }
 
+.input-bloqueado{
+  background-color: #f0f0f0;
+  cursor: not-allowed;
+}
+
