@@ -126,7 +126,14 @@ function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
   return (
     <form onSubmit={handleSubmit}>
       <input name="fullName" value={formData.fullName} onChange={handleChange} placeholder="Nome completo" />
-      <input name="cpf" value={formData.cpf} onChange={handleChange} placeholder="CPF" maxLength={14} />
+      <input name="cpf" value={formData.cpf} onChange={handleChange} placeholder="CPF" maxLength={14}  
+       onFocus={() => {
+      if (selectedFarmer) {
+      alert('O CPF não pode ser alterado.');
+      // Se quiser, tira o foco do input para evitar edição:
+      (document.activeElement as HTMLElement)?.blur();
+    }
+  }}/>
       <input
         type="date"
         name="birthDate"
